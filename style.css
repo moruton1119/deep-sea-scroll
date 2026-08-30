@@ -484,6 +484,10 @@ footer .credit { font-size: .7rem; opacity: .6; }
 /* ── モバイル: テキストが全幅になるため生物を薄くして被りを緩和 ── */
 @media (max-width: 700px) {
   .sea-life { opacity: .5; }
-  .sea-life .angler { left: 52% !important; }
-  .sea-life .octo   { left: 66% !important; }
+  .sea-life .angler { left: 38% !important; }
+  .sea-life .octo   { left: 74% !important; }
+  .sea-life .worm:nth-of-type(1) { left: 45% !important; }
+  .sea-life .worm:nth-of-type(2) { left: 55% !important; }
+  .sea-life .worm:nth-of-type(3) { display: none; }
+  .sea-life .crab { left: 64% !important; }
 }
