@@ -491,3 +491,41 @@ footer .credit { font-size: .7rem; opacity: .6; }
   .sea-life .worm:nth-of-type(3) { display: none; }
   .sea-life .crab { left: 64% !important; }
 }
+
+/* ============================================================
+   水中都市（チャレンジャー深淵の背景）
+   ============================================================ */
+.city-bg {
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: min(900px, 94vw);
+  pointer-events: none;
+  z-index: 0;
+}
+.city-bg svg { display: block; width: 100%; height: auto; }
+.city-bg .st  { fill: none; stroke: rgba(255, 215, 150, .40); stroke-width: 2; }
+.city-bg .st2 { fill: none; stroke: rgba(255, 215, 150, .20); stroke-width: 1.5; }
+.city-bg .fl  { fill: rgba(255, 210, 140, .07); }
+.city-bg .fl2 { fill: rgba(255, 210, 140, .13); }
+.city-bg .win   { fill: currentColor; color: hsl(38, 100%, 70%); filter: drop-shadow(0 0 5px currentColor); animation: cityWin 4.5s ease-in-out infinite; }
+.city-bg .win-c { fill: currentColor; color: hsl(190, 100%, 72%); filter: drop-shadow(0 0 5px currentColor); animation: cityWin 5.2s ease-in-out infinite; }
+.city-bg .beacon { animation: cityWin 2.2s ease-in-out infinite; }
+.city-bg .win-g  { fill: currentColor; color: hsl(38, 100%, 70%); filter: drop-shadow(0 0 6px currentColor); animation: cityWin 4.5s ease-in-out infinite; }
+
+@keyframes cityWin { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+
+.city-bg .sub-float { animation: subBob 9s ease-in-out infinite; }
+@keyframes subBob {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(6px, -5px); }
+}
+
+.city-bg .cbub {
+  fill: none; stroke: rgba(170, 220, 255, .45); stroke-width: 1.2;
+  animation: cbubRise 7s linear infinite;
+}
+@keyframes cbubRise {
+  0%   { transform: translateY(0);     opacity: .7; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
