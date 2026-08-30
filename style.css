@@ -1,0 +1,236 @@
+/* ============================================================
+   DEEP SEA SCROLL — 深海を潜る
+   style.css
+   ============================================================ */
+
+:root {
+  --glow: 0;            /* JSが更新: 発光量 0〜26px */
+  --glow-hue: 190;      /* JSが更新: 深度で発光色相が変わる */
+  --ink: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Serif JP', serif;
+  color: var(--ink);
+  /* 背景色は JS が深度から補間して上書き */
+  background-color: #8ec9e6;
+  overflow-x: hidden;
+}
+
+/* ── 選択時 ── */
+::selection { background: rgba(0,255,255,.25); }
+
+/* ============================================================
+   発光 — JS は --glow と --glow-hue だけ更新する
+   浅瀬 = ほぼ光らない / 深海 = 文字が自分で光る
+   ============================================================ */
+h1, h2, p, .hud, .hero-scroll span {
+  text-shadow:
+    0 0 calc(var(--glow) * 0.5px)  hsla(var(--glow-hue), 100%, 70%, calc(var(--glow) / 40)),
+    0 0 calc(var(--glow) * 1.5px)  hsla(var(--glow-hue), 100%, 65%, calc(var(--glow) / 30)),
+    0 0 calc(var(--glow) * 4px)    hsla(var(--glow-hue), 100%, 60%, calc(var(--glow) / 60));
+  transition: text-shadow .15s linear;
+}
+
+/* ============================================================
+   パーティクル（生物発光プランクトン） / 泡レイヤー
+   ============================================================ */
+#plankton {
+  position: fixed; inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+#bubble-layer {
+  position: fixed; inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── 泡（上昇しすぎると湧く） ── */
+.bubble {
+  position: absolute;
+  bottom: -3vh;
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,.05));
+  animation: bubbleUp linear forwards;
+}
+@keyframes bubbleUp {
+  0%   { transform: translateY(0) translateX(0) scale(.6); opacity: 0; }
+  10%  { opacity: .9; }
+  100% { transform: translateY(-112vh) translateX(var(--drift, 20px)) scale(1.1); opacity: 0; }
+}
+
+/* ============================================================
+   HUD — 深度計（右・縦書き）
+   ============================================================ */
+.hud {
+  position: fixed;
+  z-index: 10;
+  font-family: 'Share Tech Mono', monospace;
+}
+.hud-depth {
+  right: 14px; top: 50%;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 10px;
+  background: rgba(0, 8, 18, .28);
+  border: 1px solid rgba(160, 230, 255, .18);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.hud-label { font-size: .72rem; letter-spacing: .35em; opacity: .75; }
+.hud-value { font-size: 1.05rem; letter-spacing: .08em; color: #bff3ff; }
+.hud-zone  { font-size: .72rem; letter-spacing: .2em; opacity: .8; }
+
+/* ── 泡警告HUD ── */
+.hud-bubbles {
+  left: 18px; bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: .78rem;
+  padding: 8px 14px;
+  background: rgba(0, 8, 18, .3);
+  border: 1px solid rgba(160, 230, 255, .2);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .3s, transform .3s;
+  pointer-events: none;
+}
+.hud-bubbles.on { opacity: 1; transform: translateY(0); }
+.hud-bubbles span:first-child { animation: bob 1.2s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-3px); } }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+#hero {
+  position: relative;
+  z-index: 3;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  gap: 18px;
+  padding: 0 24px;
+}
+.hero-eyebrow {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .8rem; letter-spacing: .5em; text-indent: .5em;
+  opacity: .85;
+}
+.hero-title {
+  font-size: clamp(2.4rem, 7vw, 4.6rem);
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+.hero-en {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(.9rem, 2vw, 1.2rem);
+  letter-spacing: .6em; text-indent: .6em;
+  opacity: .9;
+}
+.hero-lead {
+  font-size: clamp(.95rem, 2vw, 1.15rem);
+  line-height: 2.2;
+  opacity: .92;
+}
+/* 下向き矢印 */
+.hero-scroll {
+  margin-top: 26px;
+  display: flex; flex-direction: column;
+  gap: 6px; align-items: center;
+}
+.hero-scroll span {
+  width: 1px; height: 26px;
+  background: rgba(255,255,255,.75);
+  animation: drop 1.6s ease-in-out infinite;
+}
+.hero-scroll span:nth-child(2) { animation-delay: .2s; }
+.hero-scroll span:nth-child(3) { animation-delay: .4s; }
+@keyframes drop {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  45%  { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* ============================================================
+   ZONE セクション
+   ============================================================ */
+main { position: relative; z-index: 3; }
+
+.zone {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+  padding: 12vh 10vw 12vh max(10vw, 90px);
+  max-width: 980px;
+  margin: 0 auto;
+}
+.zone-eyebrow {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .78rem;
+  letter-spacing: .4em;
+  opacity: .7;
+}
+.zone h2 {
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+  letter-spacing: .14em;
+}
+.zone-desc {
+  font-size: clamp(.98rem, 2vw, 1.2rem);
+  line-height: 2.4;
+  max-width: 34em;
+  opacity: .95;
+}
+.zone-end {
+  margin-top: 6vh;
+  font-size: .95rem;
+  letter-spacing: .3em;
+  opacity: .75;
+  text-align: center;
+}
+
+/* ── リビール（アビスガイド方式） ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s ease, transform .9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.zone .reveal:nth-child(2) { transition-delay: .12s; }
+.zone .reveal:nth-child(3) { transition-delay: .24s; }
+.zone .reveal:nth-child(4) { transition-delay: .36s; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  position: relative; z-index: 3;
+  text-align: center;
+  padding: 8vh 24px 10vh;
+  font-size: .82rem;
+  line-height: 2;
+  opacity: .8;
+}
+footer .credit { font-size: .7rem; opacity: .6; }
+
+/* ============================================================
+   レスポンシブ
+   ============================================================ */
+@media (max-width: 640px) {
+  .hud-depth { right: 8px; padding: 14px 8px; gap: 10px; }
+  .hud-value { font-size: .9rem; }
+  .zone { padding-left: 10vw; }
+}

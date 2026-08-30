@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>深海を潜る — DEEP SEA SCROLL</title>
+<meta name="description" content="スクロールで海の底まで潜るだけのページ。0mからチャレンジャー深淵10,911mまで。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="plankton" aria-hidden="true"></canvas>
+<div id="bubble-layer" aria-hidden="true"></div>
+
+<!-- 深度HUD（右・縦書き） -->
+<div class="hud hud-depth" aria-hidden="true">
+  <span class="hud-label">DEPTH</span>
+  <span class="hud-value"><span id="depth-num">0</span>m</span>
+  <span class="hud-zone" id="zone-name">海面</span>
+</div>
+
+<!-- 泡警告（上昇時） -->
+<div class="hud hud-bubbles" id="bubble-hud" aria-hidden="true">
+  <span>⌾</span><span>急浮上にご注意</span>
+</div>
+
+<header id="hero">
+  <p class="hero-eyebrow reveal">SCROLL TO DIVE</p>
+  <h1 class="hero-title reveal">深海を潜る</h1>
+  <p class="hero-en reveal">DEEP SEA SCROLL</p>
+  <p class="hero-lead reveal">
+    スクロールするほど、潜っていきます。<br>
+    水圧と暗さに耐えながら、海の底 10,911m まで。
+  </p>
+  <div class="hero-scroll reveal" aria-hidden="true">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<main>
+
+<section class="zone" data-depth="10">
+  <p class="zone-eyebrow reveal">EPipelagic — 0〜200m</p>
+  <h2 class="reveal">太陽光帯</h2>
+  <p class="zone-desc reveal">
+    光が水面まで届き、海の中がいちばん明るい帯。<br>
+    サンゴ礁、ウミガメ、クラゲ、マグロ —— 海の生きもののほとんどがここに暮らしている。<br>
+    地球の海のいちばんにぎやかな階。
+  </p>
+</section>
+
+<section class="zone" data-depth="600">
+  <p class="zone-eyebrow reveal">Mesopelagic — 200〜1,000m</p>
+  <h2 class="reveal">薄明帯</h2>
+  <p class="zone-desc reveal">
+    青い光だけがかすかに届く世界。<br>
+    「生きた化石」ラブカが棲み、発光バクテリアを住まわせた発光器官で獲物を誘うアンコウの仲間もここから現れる。<br>
+    昼は深く、夜は浅く —— 世界最大の動物群団が毎日上下する。
+  </p>
+</section>
+
+<section class="zone" data-depth="2500">
+  <p class="zone-eyebrow reveal">Bathypelagic — 1,000〜4,000m</p>
+  <h2 class="reveal">深海带</h2>
+  <p class="zone-desc reveal">
+    太陽の光が完全に消える。世界は音と圧力だけになる。<br>
+    世界最大の無脊椎動物ダイオウイカ、瞳が上を向くメンダコ。<br>
+    生きものたちは、自らの光でここを照らしている。
+  </p>
+</section>
+
+<section class="zone" data-depth="5000">
+  <p class="zone-eyebrow reveal">Abyssopelagic — 4,000〜6,000m</p>
+  <h2 class="reveal">超深海带</h2>
+  <p class="zone-desc reveal">
+    「深淵」と呼ばれる世界。水温は氷点近く、水圧は1平方cmあたり500kg超。<br>
+    海底の熱水噴出孔では、チューブワームやユノハナガニが太陽なしの生態系を作っている。<br>
+    地球上でいちばん広い「床」。
+  </p>
+</section>
+
+<section class="zone" data-depth="8000">
+  <p class="zone-eyebrow reveal">Hadopelagic — 6,000m〜</p>
+  <h2 class="reveal">ハデス帯</h2>
+  <p class="zone-desc reveal">
+    ギリシャ神話の冥界の名を冠した、海溝だけの世界。<br>
+    8,000mを超えると、魚はもう棲めない —— 限界を超えた水圧のため。<br>
+    それでも底には、有孔虫や端脚類が静かに棲んでいる。
+  </p>
+</section>
+
+<section class="zone" data-depth="10911" id="final">
+  <p class="zone-eyebrow reveal">Challenger Deep</p>
+  <h2 class="reveal">チャレンジャー深淵</h2>
+  <p class="zone-desc reveal">
+    10,911m —— マリアナ海溝の最深部、地球の海のいちばん深い場所。<br>
+    エベレストを沈めても、なお2,000m以上余る。<br>
+    この静けさの底に、人間の作ったものも少しだけ届いている。
+  </p>
+  <p class="zone-end reveal">— おわり。また上で会いましょう。—</p>
+</section>
+
+</main>
+
+<footer>
+  <p>DEEP SEA SCROLL — スクロールで潜る、海の断面図。</p>
+  <p class="credit">深度帯区分は一般的な海洋学の区分に基づく。生物・記述は一般知識の範囲で記載。</p>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
