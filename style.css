@@ -180,19 +180,8 @@ main { position: relative; z-index: 3; }
   margin: 0 auto;
 }
 
-/* ── 帯ごとの環境光（違う色がうっすら差す） ── */
-.zone::before {
-  content: '';
-  position: absolute; inset: 0;
-  pointer-events: none;
-  border-radius: 0;
-}
-.zone--sun::before      { background: radial-gradient(ellipse 90% 60% at 50% 0%,  rgba(160, 220, 255, 0.10) 0%, transparent 65%); }
-.zone--twilight::before { background: radial-gradient(ellipse 80% 70% at 30% 20%, rgba(90, 150, 255, 0.10) 0%, transparent 70%); }
-.zone--midnight::before { background: radial-gradient(ellipse 70% 80% at 70% 40%, rgba(120, 90, 255, 0.12) 0%, transparent 70%); }
-.zone--abyss::before    { background: radial-gradient(ellipse 90% 70% at 50% 90%, rgba(190, 110, 255, 0.13) 0%, transparent 70%); }
-.zone--hades::before    { background: radial-gradient(ellipse 80% 70% at 40% 60%, rgba(255, 90, 130, 0.10) 0%, transparent 70%); }
-.zone--final::before    { background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255, 200, 120, 0.07) 0%, transparent 70%); }
+/* ── 環境光は廃止（帯の境界に区切り線として見えるため） ──
+   帯の色味は body 背景の深度補間＋深度数字＋住む生物で表現する */
 
 /* ── 巨大深度数字（帯の目印） ── */
 .zone-depth-bg {
