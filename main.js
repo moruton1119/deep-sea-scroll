@@ -8,13 +8,14 @@
    stops[i] = [depth(m), [r,g,b]]
    ──────────────────────────────────────────────────────── */
 const COLOR_STOPS = [
-  [    0, [142, 201, 230]],  // 海面
-  [  200, [ 46, 130, 178]],  // 太陽光帯の底
-  [  600, [ 14,  72, 118]],  // 薄明帯
-  [ 1000, [  5,  34,  68]],  // 光が消える
-  [ 2500, [  2,  14,  34]],  // 深海带
-  [ 5000, [  1,   6,  18]],  // 超深海带
-  [10911, [  0,   2,   8]],  // チャレンジャー深淵
+  [    0, [142, 201, 230]],  // 海面: 空色
+  [  200, [ 52, 138, 186]],  // 太陽光帯の底: 明るい青
+  [  600, [ 20,  88, 140]],  // 薄明帯: まだ青い
+  [ 1000, [ 14,  56, 104]],  // 光が消える: 青黒
+  [ 2500, [ 14,  32,  76]],  // 深海带: 青紫
+  [ 5000, [ 24,  20,  70]],  // 超深海带: 紫
+  [ 8000, [ 42,  16,  62]],  // ハデス帯: 赤紫
+  [10911, [ 14,   6,  26]],  // チャレンジャー深淵: 暗紫（完全黒にしない）
 ];
 
 const MAX_DEPTH = 10911;
@@ -33,13 +34,12 @@ function colorAtDepth(depth) {
   return COLOR_STOPS[COLOR_STOPS.length - 1][1];
 }
 
-/* 発光色相: 浅瀬=白っぽい → 中層=シアン → 超深海=紫寄り */
+/* 発光色相: 浅瀬=白っぽい → 中層=シアン → 超深海=紫 */
 function hueAtDepth(depth) {
   const p = Math.min(depth / MAX_DEPTH, 1);
-  // 195(水色) → 185(シアン) → 150(青緑) → 280(紫外) ぽく曲線で寄せる
   if (p < 0.3) return 195;
-  if (p < 0.6) return 190 - (p - 0.3) * 30;
-  return lerp(181, 265, (p - 0.6) / 0.4);
+  if (p < 0.6) return 195 - (p - 0.3) * 50;   // 195 → 180
+  return lerp(180, 290, (p - 0.6) / 0.4);     // 180 → 290(紫)
 }
 
 /* ── 要素参照 ── */
@@ -95,8 +95,22 @@ window.addEventListener('resize', resizeCanvas);
 
 let particles = [];
 
-function spawnParticle() {
+/* kind: 'glow' = 生物発光（瞬く）/ 'snow' = マリンスノー（ゆっくり落ちる） */
+function spawnParticle(kind) {
+  if (kind === 'snow') {
+    return {
+      kind,
+      x: Math.random() * W,
+      y: Math.random() * H,
+      size: Math.random() * 1.4 + 0.5,
+      speedX: (Math.random() - 0.5) * 0.08,
+      speedY: Math.random() * 0.5 + 0.2,   // 下向き
+      baseOpacity: Math.random() * 0.2 + 0.08,
+      phase: 0, twinkle: 0, hue: 0,
+    };
+  }
   return {
+    kind,
     x: Math.random() * W,
     y: Math.random() * H,
     size: Math.random() * 1.8 + 0.4,
@@ -109,21 +123,43 @@ function spawnParticle() {
   };
 }
 
-function updatePlankton(p) {
-  const target = Math.round(lerp(14, 110, p));  // 浅瀬14 → 深海110
-  while (particles.length < target) particles.push(spawnParticle());
-  if (particles.length > target) particles.length = target;
+function updatePlankton(depth) {
+  const p = Math.min(depth / MAX_DEPTH, 1);
+  const total = Math.round(lerp(16, 120, p));          // 浅瀬16 → 深海120
+  /* マリンスノー: 400m以降で混ざりはじめ、深海では最大45% */
+  const snowRatio = depth < 400 ? 0 : Math.min(0.45, (depth - 400) / 9000);
+  const snowTarget = Math.round(total * snowRatio);
+  const glowTarget = total - snowTarget;
+
+  let glowCount = 0, snowCount = 0;
+  const next = [];
+  for (const pt of particles) {
+    if (pt.kind === 'snow' && snowCount < snowTarget) { next.push(pt); snowCount++; }
+    else if (pt.kind === 'glow' && glowCount < glowTarget) { next.push(pt); glowCount++; }
+  }
+  while (glowCount < glowTarget) { next.push(spawnParticle('glow')); glowCount++; }
+  while (snowCount < snowTarget) { next.push(spawnParticle('snow')); snowCount++; }
+  particles = next;
 }
 
 function animatePlankton() {
   ctx.clearRect(0, 0, W, H);
   for (const pt of particles) {
-    pt.phase += pt.twinkle;
-    const a = pt.baseOpacity * (0.5 + 0.5 * Math.sin(pt.phase));
-    ctx.beginPath();
-    ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
-    ctx.fillStyle = `hsla(${pt.hue}, 100%, 72%, ${a})`;
-    ctx.fill();
+    if (pt.kind === 'snow') {
+      /* マリンスノー: 白い粒が静かに降る */
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(230, 238, 250, ${pt.baseOpacity})`;
+      ctx.fill();
+    } else {
+      /* 生物発光: 瞬く */
+      pt.phase += pt.twinkle;
+      const a = pt.baseOpacity * (0.5 + 0.5 * Math.sin(pt.phase));
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${pt.hue}, 100%, 72%, ${a})`;
+      ctx.fill();
+    }
 
     pt.x += pt.speedX;
     pt.y += pt.speedY;
@@ -167,7 +203,7 @@ function update() {
   });
 
   /* プランクトン密度更新 */
-  updatePlankton(p);
+  updatePlankton(depth);
 }
 
 window.addEventListener('scroll', update, { passive: true });

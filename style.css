@@ -170,6 +170,7 @@ h1, h2, p, .hud, .hero-scroll span {
 main { position: relative; z-index: 3; }
 
 .zone {
+  position: relative;
   min-height: 100vh;
   display: flex; flex-direction: column;
   justify-content: center;
@@ -177,6 +178,142 @@ main { position: relative; z-index: 3; }
   padding: 12vh 10vw 12vh max(10vw, 90px);
   max-width: 980px;
   margin: 0 auto;
+}
+
+/* ── 帯ごとの環境光（違う色がうっすら差す） ── */
+.zone::before {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  border-radius: 0;
+}
+.zone--sun::before      { background: radial-gradient(ellipse 90% 60% at 50% 0%,  rgba(160, 220, 255, 0.10) 0%, transparent 65%); }
+.zone--twilight::before { background: radial-gradient(ellipse 80% 70% at 30% 20%, rgba(90, 150, 255, 0.10) 0%, transparent 70%); }
+.zone--midnight::before { background: radial-gradient(ellipse 70% 80% at 70% 40%, rgba(120, 90, 255, 0.12) 0%, transparent 70%); }
+.zone--abyss::before    { background: radial-gradient(ellipse 90% 70% at 50% 90%, rgba(190, 110, 255, 0.13) 0%, transparent 70%); }
+.zone--hades::before    { background: radial-gradient(ellipse 80% 70% at 40% 60%, rgba(255, 90, 130, 0.10) 0%, transparent 70%); }
+.zone--final::before    { background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255, 200, 120, 0.07) 0%, transparent 70%); }
+
+/* ── 巨大深度数字（帯の目印） ── */
+.zone-depth-bg {
+  position: absolute;
+  right: 3vw; bottom: 4vh;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(4.2rem, 15vw, 12rem);
+  letter-spacing: -.03em;
+  opacity: .14;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  color: var(--accent, rgba(170, 220, 255, 1));
+}
+.zone--sun      { --accent: rgb(150, 210, 255); }
+.zone--twilight { --accent: rgb(120, 165, 255); }
+.zone--midnight { --accent: rgb(165, 120, 255); }
+.zone--abyss    { --accent: rgb(205, 150, 255); }
+.zone--hades    { --accent: rgb(255, 130, 165); }
+.zone--final    { --accent: rgb(255, 210, 140); }
+
+/* ============================================================
+   SEA LIFE — 帯ごとの住人（SVGシルエット）
+   浅瀬 = 暗い影 / 深海 = 自分で光る
+   ============================================================ */
+.sea-life {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.sea-life > * { position: absolute; }
+
+/* 帯ごとの体色 */
+.zone--sun      .life { fill: rgba(18, 55, 88, 0.42); }
+.zone--twilight .life { fill: rgba(150, 195, 240, 0.20); }
+.zone--midnight .life { fill: rgba(155, 200, 255, 0.15); }
+.zone--abyss    .life { fill: rgba(210, 175, 255, 0.16); }
+.zone--hades    .life { fill: rgba(255, 160, 190, 0.14); }
+
+/* 線画パーツ（触手・足・竿） */
+.life .stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  color: inherit;
+  opacity: .8;
+}
+.life .eye { fill: rgba(200, 240, 255, 0.75); }
+
+/* 提灯（チョウチンアンコウ） */
+.life .lantern {
+  fill: hsla(45, 100%, 72%, .95);
+  animation: lantPulse 2.6s ease-in-out infinite;
+}
+.life .rod { stroke: hsla(45, 60%, 70%, .8); }
+
+/* ワームの赤い冠 */
+.life .crown { fill: rgba(255, 90, 90, 0.85); }
+.life.worm rect { fill: rgba(235, 240, 255, 0.22); }
+
+/* 端脚類の光点 */
+.life .spark {
+  fill: hsla(190, 100%, 75%, .95);
+  filter: drop-shadow(0 0 6px hsla(190, 100%, 70%, .9));
+}
+
+/* ── アニメーション ── */
+.swim-r {
+  animation: swimR var(--dur, 30s) linear infinite;
+}
+.swim-l {
+  animation: swimL var(--dur, 40s) linear infinite;
+}
+@keyframes swimR { from { transform: translateX(-50vw); } to { transform: translateX(150vw); } }
+@keyframes swimL { from { transform: translateX(50vw); }  to { transform: translateX(-150vw); } }
+
+.drift {
+  animation: drift var(--dur, 12s) ease-in-out infinite;
+}
+@keyframes drift {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-26px) rotate(-2deg); }
+}
+
+.jelly-drift {
+  animation: jellyDrift var(--dur, 10s) ease-in-out infinite;
+}
+@keyframes jellyDrift {
+  0%, 100% { transform: translateY(0) scaleX(1); }
+  50%      { transform: translateY(-20px) scaleX(1.07); }
+}
+
+.glow-pulse {
+  animation: glowPulse 3.2s ease-in-out infinite;
+  animation-delay: var(--jp-delay, 0s);
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: .25; filter: drop-shadow(0 0 2px currentColor); }
+  50%      { opacity: .9;  filter: drop-shadow(0 0 12px currentColor); }
+}
+.zone--twilight .life.glow-pulse { color: hsl(195, 90%, 70%); }
+.zone--hades    .life.glow-pulse { color: hsl(320, 90%, 75%); }
+
+.creep {
+  animation: creep 8s ease-in-out infinite;
+}
+@keyframes creep {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(30px); }
+}
+
+@keyframes lantPulse {
+  0%, 100% { opacity: .55; filter: drop-shadow(0 0 4px hsla(45, 100%, 70%, .7)); }
+  50%      { opacity: 1;   filter: drop-shadow(0 0 16px hsla(45, 100%, 75%, 1)); }
+}
+
+.zone-eyebrow, .zone h2, .zone-desc, .zone-end {
+  position: relative;
+  z-index: 2;
 }
 .zone-eyebrow {
   font-family: 'Share Tech Mono', monospace;
