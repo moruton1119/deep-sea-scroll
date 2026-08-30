@@ -305,9 +305,9 @@ main { position: relative; z-index: 3; }
 /* ── 巨大深度数字（帯の目印） ── */
 .zone-depth-bg {
   position: absolute;
-  right: 3vw; bottom: 4vh;
+  left: 6vw; bottom: 4vh;
   font-family: 'Share Tech Mono', monospace;
-  font-size: clamp(4.2rem, 15vw, 12rem);
+  font-size: clamp(3.5rem, 10vw, 8rem);
   letter-spacing: -.03em;
   opacity: .14;
   pointer-events: none;
