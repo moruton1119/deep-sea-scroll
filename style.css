@@ -112,6 +112,125 @@ h1, h2, p, .hud, .hero-scroll span {
 @keyframes bob { 50% { transform: translateY(-3px); } }
 
 /* ============================================================
+   HERO SCENE — 空（太陽・雲）→ 波間 → 水中
+   ============================================================ */
+.hero-scene {
+  position: absolute; inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+#hero > *:not(.hero-scene) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 空 ── */
+.sky {
+  position: absolute; top: 0; left: 0; right: 0; height: 62%;
+  background: linear-gradient(180deg, #7ec3ec 0%, #a5d8f2 55%, #d2ecfb 100%);
+}
+
+/* 太陽 */
+.sun {
+  position: absolute; top: 13%; right: 15%;
+  width: 88px; height: 88px; border-radius: 50%;
+  background: radial-gradient(circle, #fffbe8 0%, #ffeead 45%, #ffd97a 100%);
+  box-shadow:
+    0 0 46px 14px rgba(255, 238, 170, .75),
+    0 0 140px 60px rgba(255, 232, 150, .35);
+  animation: sunGlow 7s ease-in-out infinite;
+}
+@keyframes sunGlow {
+  50% {
+    box-shadow:
+      0 0 62px 20px rgba(255, 240, 180, .9),
+      0 0 175px 80px rgba(255, 232, 150, .45);
+  }
+}
+
+/* 雲 */
+.cloud {
+  position: absolute;
+  fill: rgba(255, 255, 255, .92);
+  filter: drop-shadow(0 6px 12px rgba(120, 170, 210, .25));
+}
+.cloud-a { width: 240px; top: 15%; left: 5%;  animation: cloudDrift 75s  linear infinite; }
+.cloud-b { width: 150px; top: 33%; left: 55%; animation: cloudDrift 95s  linear infinite; animation-delay: -30s; opacity: .9; }
+.cloud-c { width: 190px; top: 7%;  left: 37%; animation: cloudDrift 120s linear infinite; animation-delay: -70s; opacity: .8; }
+@keyframes cloudDrift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(115vw); }
+}
+
+/* ── 波間・水中 ── */
+.sea {
+  position: absolute; top: 62%; left: 0; right: 0; bottom: 0;
+}
+
+/* 2層の波（逆向きに流れる） */
+.wave {
+  position: absolute; left: 0;
+  width: 200%; height: 110px;
+}
+.wave path {
+  stroke: rgba(255, 255, 255, .4);
+  stroke-width: 2;
+}
+.wave-back {
+  top: -45px; fill: #57ade0;
+  opacity: .65;
+  animation: waveMove 16s linear infinite;
+}
+.wave-front {
+  top: -12px; fill: #2f86bf;
+  animation: waveMove 10s linear infinite reverse;
+}
+@keyframes waveMove {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* 水中の光の筋（ゴッドレイ） */
+.light-rays {
+  position: absolute; top: 12px; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    105deg,
+    transparent 0 70px,
+    rgba(255, 255, 255, .07) 70px 100px,
+    transparent 100px 170px
+  );
+  animation: raysShift 14s ease-in-out infinite alternate;
+}
+@keyframes raysShift {
+  to { transform: translateX(40px); opacity: .6; }
+}
+
+/* 波の下の水色フェード（body背景へ溶ける） */
+.sea-fill {
+  position: absolute; top: 58px; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, rgba(47, 134, 191, .9) 0%, rgba(47, 134, 191, 0) 72%);
+}
+
+/* 空の上でも白文字を読みやすく */
+#hero .hero-eyebrow,
+#hero .hero-title,
+#hero .hero-en,
+#hero .hero-lead {
+  text-shadow:
+    0 2px 14px rgba(12, 55, 95, .45),
+    0 0 2px rgba(12, 55, 95, .3);
+}
+
+@media (max-width: 640px) {
+  .sun { width: 62px; height: 62px; top: 10%; right: 11%; }
+  .cloud-a { width: 165px; }
+  .cloud-b { width: 105px; }
+  .cloud-c { width: 130px; }
+  .wave { height: 80px; }
+  .sky { height: 58%; }
+}
+
+/* ============================================================
    HERO
    ============================================================ */
 #hero {

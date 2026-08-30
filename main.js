@@ -252,3 +252,16 @@ function checkAscent() {
   }
 }
 window.addEventListener('scroll', checkAscent, { passive: true });
+
+/* ============================================================
+   HERO: 潜入パララックス
+   スクロールで水面シーン（空・太陽・波）が少しだけ遅れて残る
+   = 波間をくぐり抜けて潜っていく感じ
+   ============================================================ */
+const heroScene = document.querySelector('.hero-scene');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (heroScene && y < window.innerHeight * 1.3) {
+    heroScene.style.transform = `translateY(${(y * 0.22).toFixed(1)}px)`;
+  }
+}, { passive: true });
