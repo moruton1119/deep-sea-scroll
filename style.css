@@ -492,14 +492,16 @@ footer .credit { font-size: .7rem; opacity: .6; }
   .sea-life .crab { left: 64% !important; }
 }
 
+/* 深度数字は水中都市の上に表示させる（被りを見せない） */
+.zone--final .zone-depth-bg { z-index: 1; }
+
 /* ============================================================
    水中都市（チャレンジャー深淵の背景）
    ============================================================ */
 .city-bg {
   position: absolute;
-  bottom: 0; left: 50%;
-  transform: translateX(-50%);
-  width: min(900px, 94vw);
+  bottom: 0; right: 0;
+  width: min(600px, 94vw);
   pointer-events: none;
   z-index: 0;
 }
@@ -514,6 +516,10 @@ footer .credit { font-size: .7rem; opacity: .6; }
 .city-bg .win-g  { fill: currentColor; color: hsl(38, 100%, 70%); filter: drop-shadow(0 0 6px currentColor); animation: cityWin 4.5s ease-in-out infinite; }
 
 @keyframes cityWin { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+
+@media (max-width: 700px) {
+  .city-bg .tw-l { display: none; }   /* 左塔群は数字と被るため非表示 */
+}
 
 .city-bg .sub-float { animation: subBob 9s ease-in-out infinite; }
 @keyframes subBob {

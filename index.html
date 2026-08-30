@@ -230,7 +230,8 @@
   <!-- ── 水中都市（背景アート） ── -->
   <div class="city-bg" aria-hidden="true">
     <svg viewBox="0 0 1200 380">
-      <!-- 左: 塔群 -->
+      <!-- 左: 塔群（モバイルでは非表示） -->
+      <g class="tw-l">
       <polygon points="185,335 185,175 205,160 225,175 225,335" class="fl"/>
       <polygon points="185,335 185,175 205,160 225,175 225,335" class="st"/>
       <g class="win-g" style="animation-delay:.7s">
@@ -246,11 +247,11 @@
         <rect x="264" y="276" width="9" height="5"/><rect x="275" y="240" width="9" height="5"/>
         <rect x="275" y="288" width="9" height="5"/>
       </g>
-      <rect x="130" y="268" width="34" height="67" class="fl"/>
-      <rect x="130" y="268" width="34" height="67" class="st2"/>
+      <rect x="180" y="268" width="34" height="67" class="fl"/>
+      <rect x="180" y="268" width="34" height="67" class="st2"/>
       <g class="win-g" style="animation-delay:3.4s">
-        <rect x="140" y="282" width="8" height="5"/><rect x="140" y="300" width="8" height="5"/>
-        <rect x="140" y="318" width="8" height="5"/>
+        <rect x="190" y="282" width="8" height="5"/><rect x="190" y="300" width="8" height="5"/>
+        <rect x="190" y="318" width="8" height="5"/>
       </g>
 
       <!-- 中央: ジオデシック・ドーム -->
@@ -277,10 +278,11 @@
       <rect x="470" y="330" width="260" height="10" rx="2" class="fl"/>
       <rect x="470" y="330" width="260" height="10" rx="2" class="st2"/>
 
-      <!-- 連絡チューブ -->
       <path d="M490,300 C420,300 380,290 289,240" class="st2"/>
       <circle cx="380" cy="292" r="2" class="win-c"/>
       <circle cx="340" cy="278" r="2" class="win-c" style="animation-delay:1.8s"/>
+      </g>
+      <!-- 連絡チューブ（右） -->
       <path d="M710,300 C780,300 790,270 830,258" class="st2"/>
       <circle cx="785" cy="292" r="2" class="win-c" style="animation-delay:.9s"/>
 
