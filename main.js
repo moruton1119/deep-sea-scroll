@@ -62,7 +62,9 @@ function depthAtScroll() {
   let prev  = { y: 0, d: 0 };
 
   for (const z of zones) {
-    const top = z.offsetTop;
+    /* offsetTop は positioned ancestor(main)基準で hero 分だけズレるので
+       getBoundingClientRect + scrollY で document 絶対座標を使う */
+    const top = z.getBoundingClientRect().top + window.scrollY;
     const d   = Number(z.dataset.depth);
     if (yMid >= top) {
       // このセクション内（または通過済み）
