@@ -12,6 +12,9 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
+/* 泳ぐ生物の150vw移動でページ横幅が広がるのを防止（iOSズームアウト対策）
+   hiddenは古いSafari用フォールバック、clipはスクロールコンテナを作らない現代版 */
+html, body { overflow-x: hidden; overflow-x: clip; }
 
 body {
   font-family: 'Noto Serif JP', serif;
